@@ -5,15 +5,12 @@ plugins {
 }
 
 android {
-    namespace = "com.edsh.contdedup"
+    namespace = "com.edsh.contdedser"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.edsh.contdedup"
+        applicationId = "com.edsh.contdedser"
         minSdk = 31
-        targetSdk = 35
-        versionCode = 1
-        versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -35,16 +32,17 @@ android {
         jvmTarget = "11"
     }
     buildFeatures {
-        compose = true
         aidl = true
+        compose = true
     }
 }
 
 dependencies {
 
     implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.appcompat)
+    implementation(libs.material)
     implementation(libs.androidx.lifecycle.runtime.ktx)
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:${libs.versions.lifecycleRuntimeKtx}")
     implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui)

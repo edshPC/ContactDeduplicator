@@ -21,4 +21,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "ContactDeduplicator"
 include(":app")
- 
+include(":ContactDedupService")
