@@ -7,6 +7,9 @@ import android.util.Log
 import com.edsh.service.IDedupService
 
 
+/**
+ * Bound-сервис по удалению повторяющихся контактов
+ */
 class DedupService : Service() {
     companion object {
         var isRunning = false
@@ -14,6 +17,9 @@ class DedupService : Service() {
 
     private lateinit var contactUtil: ContactUtil
 
+    /**
+     * Реализация интерфейса взаимодействия AIDL [IDedupService]
+     */
     private val binder = object : IDedupService.Stub() {
         override fun dedupContacts(): String? = try {
             deduplicateContacts()
@@ -44,6 +50,9 @@ class DedupService : Service() {
         Log.i("ServiceApp", "Service destroyed")
     }
 
+    /**
+     * Очистить повторяющиеся контакты
+     */
     fun deduplicateContacts() {
         contactUtil.checkPermissions()
         if (contactUtil.deduplicateContacts() == 0)

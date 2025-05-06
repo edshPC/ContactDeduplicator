@@ -1,6 +1,6 @@
 package com.edsh.contdedup.component
 
-import DedupViewModel
+import com.edsh.contdedup.viewmodel.DedupViewModel
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -13,6 +13,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.edsh.contdedup.state.SimpleState
 
+/**
+ * Основной экран приложения дедупликатора контактов.
+ * В зависимости от состояния [SimpleState], выводит информацию о текущем состоянии
+ * @param viewModel ViewModel с логикой приложения
+ */
 @Composable
 fun DedupScreen(
     viewModel: DedupViewModel

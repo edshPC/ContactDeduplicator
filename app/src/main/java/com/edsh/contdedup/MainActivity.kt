@@ -1,6 +1,6 @@
 package com.edsh.contdedup
 
-import DedupViewModel
+import com.edsh.contdedup.viewmodel.DedupViewModel
 import android.content.ComponentName
 import android.content.Intent
 import android.content.ServiceConnection
@@ -18,6 +18,9 @@ import com.edsh.contdedup.component.DedupScreen
 import com.edsh.contdedup.ui.theme.ContactDeduplicatorTheme
 import com.edsh.service.IDedupService
 
+/**
+ * Главная activity приложения
+ */
 class MainActivity : ComponentActivity() {
 
     private var dedupService: IDedupService? = null

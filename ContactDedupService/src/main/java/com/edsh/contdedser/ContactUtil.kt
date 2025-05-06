@@ -9,20 +9,45 @@ import android.provider.ContactsContract
 import android.util.Log
 import androidx.core.content.ContextCompat
 
+/**
+ * Представление данных о контакте.
+ * Может повторяться в нескольких разных контактах
+ *
+ * @param name Имя (+ Фамилия) контакта
+ * @param phones Список телефонных номеров
+ * @param emails Список Email-адересов
+ */
 data class ContactData(
     val name: String,
     val phones: List<String>,
     val emails: List<String>
 )
 
+/**
+ * Представление контакта.
+ * *Не* может повторяться даже у одинаковых контактов
+ *
+ * @param id ID контакта в android
+ * @param data Задаваемые пользователем данные контакта
+ */
 data class Contact(
     val id: Long,
     val data: ContactData
 )
 
+/**
+ * Утилита для работы с контактами
+ *
+ * @param applicationContext Контекст приложения, в котором создается класс
+ */
 class ContactUtil(val applicationContext: Context) {
     val contentResolver: ContentResolver = applicationContext.contentResolver
 
+    /**
+     * Проверка на наличие необходимых прав для работы с контактами
+     *
+     * @throws IllegalStateException Если права не удовлетворяют требуемым
+     */
     fun checkPermissions() {
         if (ContextCompat.checkSelfPermission(applicationContext, Manifest.permission.READ_CONTACTS)
             != PackageManager.PERMISSION_GRANTED) {
@@ -34,6 +59,11 @@ class ContactUtil(val applicationContext: Context) {
         }
     }
 
+    /**
+     * Очищает все повторяющиеся контакты
+     *
+     * @return Количество очищенных контактов
+     */
     fun deduplicateContacts(): Int {
         var count = 0
         val seen = mutableSetOf<ContactData>()
@@ -46,6 +76,11 @@ class ContactUtil(val applicationContext: Context) {
         return count
     }
 
+    /**
+     * Получить все доступные контакты пользователя
+     *
+     * @return Список представлений контактов
+     */
     fun getAllContacts(): List<Contact> {
         val contacts = mutableListOf<Contact>()
 
@@ -85,6 +120,11 @@ class ContactUtil(val applicationContext: Context) {
         return contacts
     }
 
+    /**
+     * Удаляет контакт
+     *
+     * @param contactId ID контакта в android для удаления
+     */
     fun removeContact(contactId: Long) {
         val uri = ContentUris.withAppendedId(
             ContactsContract.Contacts.CONTENT_URI,
@@ -93,6 +133,12 @@ class ContactUtil(val applicationContext: Context) {
         contentResolver.delete(uri, null, null)
     }
 
+    /**
+     * Получить все номера телефонов контакта
+     *
+     * @param contactId ID контакта в android
+     * @return Список номеров телефонов
+     */
     private fun getContactPhones(contactId: Long): List<String> {
         val phones = mutableListOf<String>()
 
@@ -111,6 +157,12 @@ class ContactUtil(val applicationContext: Context) {
         return phones
     }
 
+    /**
+     * Получить все Email-адреса контакта
+     *
+     * @param contactId ID контакта в android
+     * @return Список Email-адресов
+     */
     private fun getContactEmalis(contactId: Long): List<String> {
         val emails = mutableListOf<String>()
 
