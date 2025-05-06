@@ -12,12 +12,15 @@ class DedupService : Service() {
         var isRunning = false
     }
 
+    private lateinit var contactUtil: ContactUtil
+
     private val binder = object : IDedupService.Stub() {
         override fun dedupContacts(): String? = try {
             deduplicateContacts()
             "SUCCESS"
         } catch (e: Exception) {
-            e.message
+            Log.e("ServiceApp", e.message, e)
+            e.message ?: e.javaClass.simpleName
         }
     }
 
@@ -25,6 +28,7 @@ class DedupService : Service() {
 
     override fun onCreate() {
         super.onCreate()
+        contactUtil = ContactUtil(this)
         isRunning = true
         Log.i("ServiceApp", "Service created")
     }
@@ -41,6 +45,8 @@ class DedupService : Service() {
     }
 
     fun deduplicateContacts() {
-        throw RuntimeException("Hello world")
+        contactUtil.checkPermissions()
+        val contacts = contactUtil.getAllContacts()
+        throw RuntimeException("$contacts")
     }
 }

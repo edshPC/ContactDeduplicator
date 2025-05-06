@@ -25,7 +25,7 @@ class MainActivity : ComponentActivity() {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
             dedupService = IDedupService.Stub.asInterface(service)
             dedupViewModel.dedupService = dedupService
-            Log.i("App", "Successfully binded to AIDL service")
+            Log.i("App", "Successfully binded to AIDL service: ${dedupService != null}")
         }
         override fun onServiceDisconnected(name: ComponentName?) {
             dedupService = null
