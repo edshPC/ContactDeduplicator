@@ -2,17 +2,22 @@ package com.edsh.contdedser
 
 import android.Manifest
 import android.content.ContentResolver
+import android.content.ContentUris
 import android.content.Context
 import android.content.pm.PackageManager
 import android.provider.ContactsContract
 import android.util.Log
 import androidx.core.content.ContextCompat
 
-data class Contact(
-    val id: Long,
+data class ContactData(
     val name: String,
     val phones: List<String>,
-    val emails: List<String>,
+    val emails: List<String>
+)
+
+data class Contact(
+    val id: Long,
+    val data: ContactData
 )
 
 class ContactUtil(val applicationContext: Context) {
@@ -27,6 +32,18 @@ class ContactUtil(val applicationContext: Context) {
             != PackageManager.PERMISSION_GRANTED) {
             throw IllegalStateException("Write contacts permission is denied")
         }
+    }
+
+    fun deduplicateContacts(): Int {
+        var count = 0
+        val seen = mutableSetOf<ContactData>()
+        for (contact in getAllContacts()) {
+            if (!seen.add(contact.data)) { // удаляем, если повторяется
+                removeContact(contact.id)
+                count++
+            }
+        }
+        return count
     }
 
     fun getAllContacts(): List<Contact> {
@@ -54,9 +71,11 @@ class ContactUtil(val applicationContext: Context) {
 
                 val contact = Contact(
                     id = id,
-                    name = cursor.getString(i++),
-                    phones = getContactPhones(id),
-                    emails = getContactEmalis(id),
+                    data = ContactData(
+                        name = cursor.getString(i++),
+                        phones = getContactPhones(id),
+                        emails = getContactEmalis(id),
+                    )
                 )
 
                 contacts.add(contact)
@@ -64,6 +83,14 @@ class ContactUtil(val applicationContext: Context) {
         }
 
         return contacts
+    }
+
+    fun removeContact(contactId: Long) {
+        val uri = ContentUris.withAppendedId(
+            ContactsContract.Contacts.CONTENT_URI,
+            contactId
+        )
+        contentResolver.delete(uri, null, null)
     }
 
     private fun getContactPhones(contactId: Long): List<String> {

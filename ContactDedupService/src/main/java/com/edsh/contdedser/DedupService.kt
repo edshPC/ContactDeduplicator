@@ -46,7 +46,7 @@ class DedupService : Service() {
 
     fun deduplicateContacts() {
         contactUtil.checkPermissions()
-        val contacts = contactUtil.getAllContacts()
-        throw RuntimeException("$contacts")
+        if (contactUtil.deduplicateContacts() == 0)
+            throw IllegalStateException("Duplicate contacts not found")
     }
 }
